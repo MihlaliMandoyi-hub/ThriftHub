@@ -1,0 +1,286 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="ThriftHub.SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - My ASP.NET Application</title>
+
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>
+
+    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <%-- Bootstrap 5 CDN --%>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<%-- Google Fonts --%>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<%-- Page-specific head content --%>
+<asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+
+<style>
+    /* ===== GLOBAL CSS VARIABLES ===== */
+    :root {
+        --cream:    #F5F0E8;
+        --forest:   #2C4A3E;
+        --gold:     #D4A853;
+        --charcoal: #1A1A1A;
+        --muted:    #7A7A6E;
+        --white:    #FFFFFF;
+        --border:   #DDD8CE;
+        --error:    #C0392B;
+        --success:  #27AE60;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        font-family: 'DM Sans', sans-serif;
+        background: var(--cream);
+        color: var(--charcoal);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    main { flex: 1; }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+        background: var(--forest) !important;
+        padding: 0 40px;
+        height: 64px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    }
+
+    .navbar-brand {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem;
+        color: var(--white) !important;
+        text-decoration: none;
+        letter-spacing: -0.5px;
+    }
+
+    .navbar-brand span { color: var(--gold); }
+
+    .navbar-nav .nav-link {
+        color: rgba(255,255,255,0.75) !important;
+        font-size: 0.88rem;
+        font-weight: 500;
+        padding: 8px 16px !important;
+        border-radius: 8px;
+        transition: all 0.2s;
+    }
+
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link.active {
+        background: rgba(255,255,255,0.12);
+        color: var(--white) !important;
+    }
+
+    .navbar-toggler {
+        border-color: rgba(255,255,255,0.3);
+    }
+
+    .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255%2C255%2C255%2C0.8%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+
+    .btn-nav-outline {
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        color: var(--white) !important;
+        padding: 7px 16px !important;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: all 0.2s;
+        text-decoration: none;
+    }
+
+    .btn-nav-outline:hover {
+        background: rgba(255,255,255,0.2);
+        color: var(--white) !important;
+    }
+
+    .btn-nav-gold {
+        background: var(--gold);
+        border: none;
+        color: var(--charcoal) !important;
+        padding: 7px 16px !important;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.2s;
+        text-decoration: none;
+    }
+
+    .btn-nav-gold:hover {
+        background: #C49643;
+        color: var(--charcoal) !important;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+        background: var(--forest);
+        color: rgba(255,255,255,0.75);
+        padding: 40px 0 0 0;
+        margin-top: auto;
+    }
+
+    .footer-top {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 24px 32px 24px;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 32px;
+    }
+
+    .footer-brand {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.4rem;
+        color: var(--white);
+        margin-bottom: 8px;
+    }
+
+    .footer-brand span { color: var(--gold); }
+
+    .footer-tagline {
+        font-size: 0.83rem;
+        color: rgba(255,255,255,0.55);
+        line-height: 1.6;
+    }
+
+    .footer-heading {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--gold);
+        margin-bottom: 12px;
+    }
+
+    .footer-links { list-style: none; padding: 0; }
+    .footer-links li { margin-bottom: 6px; }
+    .footer-links a {
+        color: rgba(255,255,255,0.6);
+        text-decoration: none;
+        font-size: 0.85rem;
+        transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+
+    /* ===== BRAND TICKER ===== */
+    .brand-ticker {
+        background: var(--charcoal);
+        padding: 10px 0;
+        overflow: hidden;
+        border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .ticker-track {
+        display: flex;
+        animation: tickerScroll 28s linear infinite;
+        white-space: nowrap;
+    }
+
+    .ticker-track:hover { animation-play-state: paused; }
+
+    .ticker-item {
+        color: rgba(255,255,255,0.35);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 0 28px;
+    }
+
+    .ticker-dot { color: var(--gold); opacity: 0.6; }
+
+    @keyframes tickerScroll {
+        0%   { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+
+    /* ===== FOOTER BOTTOM ===== */
+    .footer-bottom {
+        background: rgba(0,0,0,0.2);
+        padding: 14px 24px;
+        text-align: center;
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.45);
+        border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .footer-bottom strong { color: rgba(255,255,255,0.7); }
+
+    /* ===== SHARED UTILITIES ===== */
+    .page-wrap { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+
+    .server-message { padding: 12px 16px; border-radius: 10px; font-size: 0.88rem; margin-bottom: 16px; }
+    .server-message.success { background: #E9F7EF; color: var(--success); border: 1px solid #A9DFBF; }
+    .server-message.error   { background: #FDECEA; color: var(--error);   border: 1px solid #F5C6C2; }
+</style>
+
+</head>
+<body>
+    <form runat="server">
+        <asp:ScriptManager runat="server">
+            <Scripts>
+                <%--To learn more about bundling scripts in ScriptManager see https://go.microsoft.com/fwlink/?LinkID=301884 --%>
+                <%--Framework Scripts--%>
+                <asp:ScriptReference Name="MsAjaxBundle" />
+                <asp:ScriptReference Name="jquery" />
+                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
+                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
+                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
+                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
+                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
+                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
+                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
+                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
+                <asp:ScriptReference Name="WebFormsBundle" />
+                <%--Site Scripts--%>
+            </Scripts>
+        </asp:ScriptManager>
+
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" runat="server" href="~/">Application name</a>
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/About">About</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Contact">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </form>
+        <div class="container body-content">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+            <hr />
+            <footer>
+                <p>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</p>
+            </footer>
+        </div>
+    </form>
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/Scripts/bootstrap.js") %>
+    </asp:PlaceHolder>
+</body>
+</html>
